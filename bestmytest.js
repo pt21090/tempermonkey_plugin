@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         vocabulary downloader
 // @namespace    http://tampermonkey.net/
-// @version      2024-02-19
+// @version      2024-02-20
 // @description  將bestmytest網頁單字下載成檔案
 // @author       You
 // @match        https://www.bestmytest.com/toeic/vocabulary-blog/*
@@ -19,18 +19,15 @@ document.querySelectorAll('h3.vocab-title').forEach(item => {
     texts.push(text);
 });
 
-let textToSave = texts.join('\n');
+let textToCopy = texts.join('\n');
 
-let blob = new Blob([textToSave], { type: 'text/plain' });
-let url = window.URL.createObjectURL(blob);
+navigator.clipboard.writeText(textToCopy)
+    .then(() => {
+        alert('Text copied to clipboard');
+    })
+    .catch(err => {
+        console.error('Unable to copy text to clipboard: ', err);
+    });
 
-let a = document.createElement('a');
-a.href = url;
-a.download = 'output.txt';
-document.body.appendChild(a);
-
-a.click();
-
-window.URL.revokeObjectURL(url);
 
 })();
